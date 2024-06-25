@@ -29,6 +29,7 @@ model Event {
 model Actor {
   id           String      @id @default(cuid())
   name         String
+  email        String
   group        String
 
   events       Event[]
