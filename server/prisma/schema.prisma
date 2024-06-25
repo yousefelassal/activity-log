@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id           String      @id @default(cuid())
+  object       String
+  actor_id     String
+  action_id    String
+  action_name  String
+  target_id    String
+  target_name  String
+  location     String
+  occurred_at  DateTime
+  metadata     Json
+
+  actor        Actor       @relation(fields: [actor_id], references: [id])
+
+  @@index([actor_id])
+  @@index([action_id])
+  @@index([target_id])
+}
+
+model Actor {
+  id           String      @id @default(cuid())
+  name         String
+  group        String
+
+  events       Event[]
+}
