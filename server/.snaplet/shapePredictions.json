@@ -1,0 +1,102 @@
+[
+  {
+    "schemaName": "public",
+    "tableName": "Actor",
+    "predictions": [
+      {
+        "input": "public actor email",
+        "column": "email",
+        "shape": "EMAIL",
+        "confidence": 0.9950724244117737,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public actor group",
+        "column": "group",
+        "shape": "DATABASE_COLUMN",
+        "confidence": 0.2510266005992889,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public actor id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9985015392303467,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public actor name",
+        "column": "name",
+        "shape": "COMPANY_NAME",
+        "confidence": 0.6208748817443848,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "Event",
+    "predictions": [
+      {
+        "input": "public event action_id",
+        "column": "action_id",
+        "shape": "UUID",
+        "confidence": 0.9983859062194824,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public event action_name",
+        "column": "action_name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.9219667911529541,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public event id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9859280586242676,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public event location",
+        "column": "location",
+        "shape": "LOCATION_BUILDING_NUMBER",
+        "confidence": 0.8461444973945618,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public event object",
+        "column": "object",
+        "shape": "DATABASE_COLUMN",
+        "confidence": 0.3171204328536987,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public event target_id",
+        "column": "target_id",
+        "shape": "UUID",
+        "confidence": 0.9978626370429993,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public event target_name",
+        "column": "target_name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.5577715635299683,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  }
+]
