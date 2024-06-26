@@ -1,5 +1,7 @@
 import Router from 'express';
 import db from '../util/db';
+import { z } from 'zod';
+import { validate } from '../util/middleware';
 
 const router = Router();
 
@@ -61,6 +63,57 @@ router.get('/', async (req, res) => {
     });
 
     res.json(events);
+});
+
+const eventSchema = z.object({
+    actor_id: z.string().min(1, 'Actor ID is required'),
+    action: z.object({
+        id: z.string().min(1, 'Action ID is required'),
+        object: z.string(),
+        name: z.string().min(1, 'Action name is required'),
+    }),
+    object: z.string(),
+    target_id: z.string().min(1, 'Target ID is required'),
+    target_name: z.string().min(1, 'Target name is required'),
+    location: z.string().min(1, 'Location is required'),
+    metadata: z.object({
+        redirect: z.string(),
+        description: z.string(),
+        x_request_id: z.string(),
+    }),
+});
+
+type Event = z.infer<typeof eventSchema>;
+
+router.post('/', validate(eventSchema), async (req, res) => {
+    const {
+        actor_id,
+        action,
+        object,
+        target_id,
+        target_name,
+        location,
+        metadata,
+    } = req.body as Event;
+    
+    const event = await db.event.create({
+        data: {
+            actor_id,
+            action_id: action.id,
+            action_name: action.name,
+            object,
+            target_id,
+            target_name,
+            location,
+            occurred_at: new Date(),
+            metadata,
+        },
+        include: {
+            actor: true,
+        }
+    });
+
+    res.json(event);
 });
 
 export default router;
