@@ -13,11 +13,16 @@ const main = async () => {
   // Truncate all tables in the database
   await seed.$resetDatabase();
 
+  await seed.group((x) => x(1, {
+    id: 'INSTATUS-PLKADSIQ320',
+    name: 'instatus.com'
+  }))
+
   await seed.actor((x) => x(3, {
     id: (ctx) => 'user_' + copycat.uuid(ctx.seed),
     name: (ctx) => copycat.oneOf(ctx.seed, ['Ali Salah', 'Baraa Ahmed', 'Omar Emad']),
-    group: 'instatus.com',
     email: (ctx) => ctx.data.name?.toLowerCase().replace(' ', '.') + '@instatus.com',
+    group_id: 'INSTATUS-PLKADSIQ320',
 
     events: 
       (x) => x(10,

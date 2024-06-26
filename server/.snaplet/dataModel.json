@@ -34,20 +34,6 @@
           "maxLength": null
         },
         {
-          "id": "public.Actor.group",
-          "name": "group",
-          "columnName": "group",
-          "type": "text",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": null
-        },
-        {
           "id": "public.Actor.email",
           "name": "email",
           "columnName": "email",
@@ -60,6 +46,38 @@
           "hasDefaultValue": false,
           "isId": false,
           "maxLength": null
+        },
+        {
+          "id": "public.Actor.group_id",
+          "name": "group_id",
+          "columnName": "group_id",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false,
+          "maxLength": null
+        },
+        {
+          "name": "Group",
+          "type": "Group",
+          "isRequired": true,
+          "kind": "object",
+          "relationName": "ActorToGroup",
+          "relationFromFields": [
+            "group_id"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "isList": false,
+          "isId": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false
         },
         {
           "name": "Event",
@@ -253,6 +271,64 @@
       "uniqueConstraints": [
         {
           "name": "Event_pkey",
+          "fields": [
+            "id"
+          ],
+          "nullNotDistinct": false
+        }
+      ]
+    },
+    "Group": {
+      "id": "public.Group",
+      "schemaName": "public",
+      "tableName": "Group",
+      "fields": [
+        {
+          "id": "public.Group.id",
+          "name": "id",
+          "columnName": "id",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": true,
+          "maxLength": null
+        },
+        {
+          "id": "public.Group.name",
+          "name": "name",
+          "columnName": "name",
+          "type": "text",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false,
+          "maxLength": null
+        },
+        {
+          "name": "Actor",
+          "type": "Actor",
+          "isRequired": false,
+          "kind": "object",
+          "relationName": "ActorToGroup",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isList": true,
+          "isId": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false
+        }
+      ],
+      "uniqueConstraints": [
+        {
+          "name": "Group_pkey",
           "fields": [
             "id"
           ],

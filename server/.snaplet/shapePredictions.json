@@ -12,14 +12,6 @@
         "confidenceContext": 0
       },
       {
-        "input": "public actor group",
-        "column": "group",
-        "shape": "DATABASE_COLUMN",
-        "confidence": 0.2510266005992889,
-        "context": "GENERAL",
-        "confidenceContext": 0
-      },
-      {
         "input": "public actor id",
         "column": "id",
         "shape": "UUID",
@@ -94,6 +86,28 @@
         "column": "target_name",
         "shape": "COMMERCE_PRODUCT_NAME",
         "confidence": 0.5577715635299683,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "Group",
+    "predictions": [
+      {
+        "input": "public group id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9991301894187927,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public group name",
+        "column": "name",
+        "shape": "COMPANY_NAME",
+        "confidence": 0.9052385091781616,
         "context": "GENERAL",
         "confidenceContext": 0
       }
