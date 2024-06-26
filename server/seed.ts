@@ -26,7 +26,7 @@ const main = async () => {
           action_id: (ctx) => 'evt_action_' + copycat.uuid(ctx.seed),
           object: 'event_action',
           action_name: (ctx) => copycat.oneOf(ctx.seed, ['user.login_succeeded', 'user.searched_activity_log_events', 'incident.create_succeeded', 'user.invited_teammate']),
-          target_id: (ctx) => 'user' + copycat.uuid(ctx.seed),
+          target_id: (ctx) => 'user_' + copycat.uuid(ctx.seed),
           target_name: (ctx) => copycat.email(ctx.seed, { domain: 'instatus.com' }),
           location: (ctx) => copycat.ipv4(ctx.seed),
           metadata: (ctx) => [{
