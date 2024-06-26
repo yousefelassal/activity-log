@@ -3,7 +3,7 @@ const axios = require('axios');
 class InstaLog {
     constructor(secretKey) {
         this.secretKey = secretKey;
-        this.baseUrl = 'http://localhost:3000/api';
+        this.baseUrl = 'https://activity-log-rosy.vercel.app//api';
     }
 
     async createEvent(eventObject) {
