@@ -68,6 +68,21 @@ router.get('/', async (req, res) => {
     res.json(events);
 });
 
+router.get('/:id', async (req, res) => {
+    const event = await db.event.findUnique({
+        where: {
+            id: req.params.id,
+        },
+        include: { actor: true }
+    });
+
+    if (!event) {
+        return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.json(event);
+});
+
 const eventSchema = z.object({
     actor_id: z.string().min(1, 'Actor ID is required'),
     action: z.object({
