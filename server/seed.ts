@@ -26,12 +26,12 @@ const main = async () => {
           action_id: (ctx) => 'evt_action_' + copycat.uuid(ctx.seed),
           object: 'event_action',
           action_name: (ctx) => copycat.oneOf(ctx.seed, ['user.login_succeeded', 'user.searched_activity_log_events', 'incident.create_succeeded', 'user.invited_teammate']),
-          target_id: (ctx) => 'user_' + copycat.uuid(ctx.seed),
+          target_id: (ctx) => 'user_' + copycat.oneOf(ctx.seed, ['DOKVD1U3L030', 'PGTD81NCAOQ2', 'W1Y13QOHMI5H']),
           target_name: (ctx) => copycat.email(ctx.seed, { domain: 'instatus.com' }),
           location: (ctx) => copycat.ipv4(ctx.seed),
           metadata: (ctx) => [{
-            redirect: '/setup',
-            description: 'User logged in succeeded',
+            redirect: copycat.oneOf(ctx.seed, ['/', '/incidents', '/activity_log', '/setup']),
+            description: copycat.oneOf(ctx.seed, ['User logged in successfully', 'User searched for activity log events', 'Incident created successfully', 'User invited a teammate']),
             x_request_id: 'req_' + copycat.uuid(ctx.seed),
           }],
         })
