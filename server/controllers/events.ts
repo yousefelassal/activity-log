@@ -1,11 +1,11 @@
 import Router from 'express';
 import db from '../util/db';
 import { z } from 'zod';
-import { validate } from '../util/middleware';
+import { validate, extractToken } from '../util/middleware';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', extractToken, async (req, res) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const offset = (page - 1) * limit;
@@ -68,7 +68,7 @@ router.get('/', async (req, res) => {
     res.json(events);
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', extractToken, async (req, res) => {
     const event = await db.event.findUnique({
         where: {
             id: req.params.id,
@@ -103,7 +103,7 @@ const eventSchema = z.object({
 
 type Event = z.infer<typeof eventSchema>;
 
-router.post('/', validate(eventSchema), async (req, res) => {
+router.post('/', extractToken, validate(eventSchema), async (req, res) => {
     const {
         actor_id,
         action,
