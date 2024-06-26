@@ -20,5 +20,5 @@ app.use('/api/events', eventsController);
 app.use('/api/sign', signController);
 
 app.listen(config.PORT, () => {
-    console.log('🚀 Server ready at: http://localhost:3000');
+    console.log('🚀 Server ready at: http://localhost:3001');
 });
