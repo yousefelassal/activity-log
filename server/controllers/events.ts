@@ -104,34 +104,39 @@ const eventSchema = z.object({
 type Event = z.infer<typeof eventSchema>;
 
 router.post('/', extractToken, validate(eventSchema), async (req, res) => {
-    const {
-        actor_id,
-        action,
-        object,
-        target_id,
-        target_name,
-        location,
-        metadata,
-    } = req.body as Event;
-    
-    const event = await db.event.create({
-        data: {
+    try {
+        const {
             actor_id,
-            action_id: action.id,
-            action_name: action.name,
+            action,
             object,
             target_id,
             target_name,
             location,
-            occurred_at: new Date(),
             metadata,
-        },
-        include: {
-            actor: true,
-        }
-    });
+        } = req.body as Event;
+        
+        const event = await db.event.create({
+            data: {
+                actor_id,
+                action_id: action.id,
+                action_name: action.name,
+                object,
+                target_id,
+                target_name,
+                location,
+                occurred_at: new Date(),
+                metadata,
+            },
+            include: {
+                actor: true,
+            }
+        });
 
-    res.json(event);
+        res.json(event);
+    } catch (error: unknown) {
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while creating the event' });
+    }
 });
 
 export default router;
