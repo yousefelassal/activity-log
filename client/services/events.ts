@@ -68,8 +68,8 @@ export async function getEvents(url:string): Promise<AllEvents[]> {
   return data;
 }
 
-export async function getEvent(id:string): Promise<SingleEvent> {
-  const { data } = await axios.get(`${baseUrl}/events/${id}`, {
+export async function getEvent(url:string): Promise<SingleEvent> {
+  const { data } = await axios.get(url, {
     headers: {
         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJncm91cF9pZCI6IklOU1RBVFVTLVBMS0FEU0lRMzIwIiwiaWF0IjoxNzE5NDExODc1fQ.qe8-fAwmXPiU0w8VsJ7BRBDGR2pB_OyjPiFguh_irJU'
     }
