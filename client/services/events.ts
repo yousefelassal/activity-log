@@ -28,6 +28,7 @@ const allEvents = z.object({
     actor: z.object({
         email: z.string(),
     }),
+    action_name: z.string(),
     occurred_at: z.string(),
 });
 
