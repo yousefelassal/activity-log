@@ -51,7 +51,7 @@ export default function Home() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableCell colSpan={4} className="px-4 pt-[17px] pb-0">
+            <TableCell colSpan={4} className="px-4 pt-[17px] pb-0 bg-foreground rounded-[15px_15px_0px_0px]">
               <Input placeholder="Search name, email or action..." onChange={handleSearch} />
             </TableCell>
           </TableRow>
@@ -66,14 +66,14 @@ export default function Home() {
           {isLoading && <Loading />}
           {events.map((event) => <Row key={event.id} event={event} /> )}
         </TableBody>
-        <TableFooter className={cn(
-          isLoadingMore && "bg-foreground/70",
-          isReachingEnd && "opacity-50 hover:bg-foreground/100"
-        )}>
+        <TableFooter>
           <TableRow>
             <TableCell className="p-0" colSpan={4}>
               <button
-                className="h-full w-full py-4 uppercase text-center text-sm font-semibold"
+                className={cn("h-full w-full py-4 uppercase rounded-[0px_0px_13px_13px] bg-foreground hover:bg-foreground/70 transition-colors text-center text-sm font-semibold",
+                  isLoadingMore && "bg-foreground/70",
+                  isReachingEnd && "opacity-50 hover:bg-foreground/100"
+                )}
                 disabled={isReachingEnd || isLoadingMore}
                 onClick={() => setSize(size + 1)}
               >

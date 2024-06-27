@@ -2,27 +2,27 @@ import { cn } from "@/lib/utils";
 
 const Table = ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => {
     return (
-        <div className="relative rounded-[15px_15px_13px_13px] border border-border shadow-[0px_3px_5px_0px_rgba(0,0,0,0.02)] w-full overflow-auto">
-            <table className={cn("w-full text-sm", className)} {...props} />
+        <div className="w-full relative rounded-[15px_15px_13px_13px] border border-border">
+            <table className={cn("w-full text-sm shadow-[0px_3px_5px_0px_rgba(0,0,0,0.02)]", className)} {...props} />
         </div>
     );
 }
 
 const TableHeader = ({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => {
     return (
-        <thead className={cn("bg-foreground uppercase font-semibold", className)} {...props} />
+        <thead className={cn("uppercase rounded-[15px_15px_0px_0px] overflow-auto font-semibold", className)} {...props} />
     );
 }
 
 const TableHead = ({ className, ...props }: React.ThHTMLAttributes<HTMLTableCellElement>) => {
     return (
-        <th className={cn("text-left text-secondaryText px-[23px] pt-[15px] pb-[14px]", className)} {...props} />
+        <th className={cn("text-left text-secondaryText px-[23px] pt-[15px] pb-[14px] bg-foreground", className)} {...props} />
     );
 }
 
 const TableBody = ({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => {
     return (
-        <tbody className={cn(className)} {...props} />
+        <tbody className={cn("", className)} {...props} />
     );
 }
 
@@ -40,7 +40,7 @@ const TableCell = ({ className, ...props }: React.TdHTMLAttributes<HTMLTableCell
 
 const TableFooter = ({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => {
     return (
-        <tfoot className={cn("bg-foreground hover:bg-foreground/70 transition-colors", className)} {...props} />
+        <tfoot className={cn(className)} {...props} />
     );
 }
 
