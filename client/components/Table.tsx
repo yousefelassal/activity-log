@@ -31,14 +31,14 @@ interface TableFooterProps extends React.HTMLAttributes<HTMLTableSectionElement>
 const Table = ({ className, ...props }: TableProps) => {
     return (
         <div className="relative rounded-[15px_15px_13px_13px] border border-border shadow-[0px_3px_5px_0px_rgba(0,0,0,0.02)] w-full overflow-auto">
-            <table className={cn("w-full", className)} {...props} />
+            <table className={cn("w-full text-sm", className)} {...props} />
         </div>
     );
 }
 
 const TableHeader = ({ className, ...props }: TableHeaderProps) => {
     return (
-        <thead className={cn("bg-foreground uppercase text-sm font-semibold", className)} {...props} />
+        <thead className={cn("bg-foreground uppercase font-semibold", className)} {...props} />
     );
 }
 
