@@ -21,7 +21,7 @@ const main = async () => {
   await seed.actor((x) => x(3, {
     id: (ctx) => 'user_' + copycat.uuid(ctx.seed),
     name: (ctx) => copycat.oneOf(ctx.seed, ['Ali Salah', 'Baraa Ahmed', 'Omar Emad']),
-    email: (ctx) => ctx.data.name?.toLowerCase().replace(' ', '.') + '@instatus.com',
+    email: (ctx) => ctx.data.name?.toLowerCase().split(' ')[0] + '@instatus.com',
     group_id: 'INSTATUS-PLKADSIQ320',
 
     events: 
