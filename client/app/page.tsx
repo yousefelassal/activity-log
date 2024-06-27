@@ -13,21 +13,38 @@ import {
 } from "@/components/Table";
 import Avatar from "@/components/Avatar";
 import Input from "@/components/Input";
+import useDebounce from "@/hooks/use-debounce";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const PAGE_SIZE = 10;
 
 export default function Home() {
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
+  const debouncedSearch = useDebounce(search, 500);
+
   const {
     data,
     isLoading,
     size,
     setSize
-  } = useSWRInfinite((index)=> `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}`, getEvents);
+  } = useSWRInfinite((index)=> 
+      `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}`, 
+      getEvents);
 
   const events = data ? data.flat() : [];
   const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
-  const isEmpty = data?.length === 0;
+  const isEmpty = data?.[0]?.length === 0;
   const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("search", e.target.value);
+    replace(`${pathname}?${params.toString()}`);
+    setSize(1);
+  }
 
   return (
     <main className="py-12 px-8">
@@ -35,7 +52,7 @@ export default function Home() {
         <TableHeader>
           <TableRow>
             <TableCell colSpan={3} className="px-4 pt-[17px] pb-0">
-              <Input placeholder="Search name, email or action..." />
+              <Input placeholder="Search name, email or action..." onChange={handleSearch} />
             </TableCell>
           </TableRow>
           <TableRow>
