@@ -7,6 +7,16 @@
 import { createSeedClient } from "@snaplet/seed";
 import { copycat } from "@snaplet/copycat";
 
+const generateRandomId = () => {
+  const length = 10;
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 const main = async () => {
   const seed = await createSeedClient();
 
@@ -19,7 +29,7 @@ const main = async () => {
   }))
 
   await seed.actor((x) => x(3, {
-    id: (ctx) => 'user_' + copycat.uuid(ctx.seed),
+    id: (ctx) => 'user_' + generateRandomId(),
     name: (ctx) => copycat.oneOf(ctx.seed, ['Ali Salah', 'Baraa Ahmed', 'Omar Emad']),
     email: (ctx) => ctx.data.name?.toLowerCase().split(' ')[0] + '@instatus.com',
     group_id: 'INSTATUS-PLKADSIQ320',
@@ -27,8 +37,8 @@ const main = async () => {
     events: 
       (x) => x(10,
         {
-          id: (ctx) => 'evt_' + copycat.uuid(ctx.seed),
-          action_id: (ctx) => 'evt_action_' + copycat.uuid(ctx.seed),
+          id: (ctx) => 'evt_' + generateRandomId(),
+          action_id: (ctx) => 'evt_action_' + generateRandomId(),
           object: 'event_action',
           action_name: (ctx) => copycat.oneOf(ctx.seed, ['user.login_succeeded', 'user.searched_activity_log_events', 'incident.create_succeeded', 'user.invited_teammate']),
           target_id: (ctx) => 'user_' + copycat.oneOf(ctx.seed, ['DOKVD1U3L030', 'PGTD81NCAOQ2', 'W1Y13QOHMI5H']),
@@ -37,7 +47,7 @@ const main = async () => {
           metadata: (ctx) => [{
             redirect: copycat.oneOf(ctx.seed, ['/', '/incidents', '/activity_log', '/setup']),
             description: copycat.oneOf(ctx.seed, ['User logged in successfully', 'User searched for activity log events', 'Incident created successfully', 'User invited a teammate']),
-            x_request_id: 'req_' + copycat.uuid(ctx.seed),
+            x_request_id: 'req_' + generateRandomId(),
           }],
         })
     }));
