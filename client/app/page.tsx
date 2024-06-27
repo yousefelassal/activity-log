@@ -20,9 +20,9 @@ export default function Home() {
 
   return (
     <main className="py-12 px-8">
-      <div className="relative rounded-xl w-full overflow-auto">
+      <div className="relative rounded-[15px_15px_13px_13px] border border-border shadow-[0px_3px_5px_0px_rgba(0,0,0,0.02)] w-full overflow-auto">
       <table className="w-full overflow-hidden">
-        <thead className="bg-gray-200 overflow-auto">
+        <thead className="bg-foreground overflow-auto uppercase">
           <tr className="text-left">
             <th className="">Actor</th>
             <th className="">Occurred At</th>
@@ -44,7 +44,7 @@ export default function Home() {
           <tr>
             <td colSpan={3}>
               <button
-                className="bg-blue-500 h-full w-full hover:bg-blue-700 text-white font-bold py-2 px-4"
+                className="bg-foreground h-full w-full hover:bg-foreground/70 font-semibold py-2 px-4 uppercase"
                 disabled={isReachingEnd || isLoadingMore}
                 onClick={() => setSize(size + 1)}
               >
