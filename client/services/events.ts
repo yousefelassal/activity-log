@@ -33,7 +33,7 @@ const allEvents = z.object({
     occurred_at: z.string(),
 });
 
-type AllEvents = z.infer<typeof allEvents>;
+export type AllEvents = z.infer<typeof allEvents>;
 
 const singleEvent = z.object({
     id: z.string(),
