@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/Table";
+import Avatar from "@/components/Avatar";
 
 const PAGE_SIZE = 10;
 
@@ -42,7 +43,10 @@ export default function Home() {
           {isLoading && <TableRow><TableCell colSpan={3} className="text-center">Loading...</TableCell></TableRow>}
           {events.map((event) => (
             <TableRow key={event.id} className="hover:bg-hover">
-              <TableCell>{event.actor.email}</TableCell>
+              <TableCell className="flex gap-[11px] items-center">
+                <Avatar name={event.actor.name} />
+                <span>{event.actor.email}</span>
+              </TableCell>
               <TableCell>{event.action_name}</TableCell>
               <TableCell>{formatDate(new Date(event.occurred_at))}</TableCell>
             </TableRow>
