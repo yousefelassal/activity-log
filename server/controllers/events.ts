@@ -48,7 +48,7 @@ router.get('/', extractToken, async (req, res) => {
     const events = await db.event.findMany({
         select: {
             id: true,
-            actor: { select: { email: true } },
+            actor: { select: { email: true, name: true } },
             action_name: true,
             occurred_at: true,
         },
