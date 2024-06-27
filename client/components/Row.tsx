@@ -86,6 +86,16 @@ const Row = ({ event }: { event: AllEvents }) => {
                             </span>
                         </button>
                     </div>
+                    <div className="grid grid-cols-[40px_1fr] items-start justify-start h-fit gap-y-3 gap-x-8">
+                        <span className="col-span-2 pb-2 uppercase font-medium text-[14px] text-[#929292]">
+                            Metadata
+                        </span>
+                        {isLoading ? (
+                            <div className="h-[144px] w-[360px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                        ) : (
+                            <pre className="min-w-max">{JSON.stringify(data?.metadata, null, 2)}</pre>
+                            )}
+                    </div>
                 </div>
             </TableCell>
         ) : (
