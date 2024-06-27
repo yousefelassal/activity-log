@@ -12,6 +12,7 @@ import {
   TableRow
 } from "@/components/Table";
 import Avatar from "@/components/Avatar";
+import Input from "@/components/Input";
 
 const PAGE_SIZE = 10;
 
@@ -32,6 +33,11 @@ export default function Home() {
     <main className="py-12 px-8">
       <Table>
         <TableHeader>
+          <TableRow>
+            <TableCell colSpan={3} className="px-4 pt-[17px] pb-0">
+              <Input placeholder="Search name, email or action..." />
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableHead>Actor</TableHead>
             <TableHead>Action</TableHead>
