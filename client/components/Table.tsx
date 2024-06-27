@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 const Table = ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => {
     return (
-        <div className="w-full relative rounded-[15px_15px_13px_13px] border border-border">
+        <div className="w-full relative rounded-[15px_15px_13px_13px] lg:border border-border">
             <table className={cn("w-full text-sm shadow-[0px_3px_5px_0px_rgba(0,0,0,0.02)]", className)} {...props} />
         </div>
     );
