@@ -12,6 +12,7 @@ const config: Config = {
         primaryText: "#1C1C1C",
         secondaryText: "#616161",
         foreground: "#F5F5F5",
+        hover: "#FBFBFB",
         border: "#F0F0F0"
       }
     },

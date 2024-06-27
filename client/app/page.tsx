@@ -1,7 +1,16 @@
 'use client'
 import useSWRInfinite from "swr/infinite";
-import { baseUrl } from "@/lib/utils";
 import { getEvents } from "@/services/events";
+import { cn, baseUrl, formatDate } from "@/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/Table";
 
 const PAGE_SIZE = 10;
 
@@ -20,41 +29,42 @@ export default function Home() {
 
   return (
     <main className="py-12 px-8">
-      <div className="relative rounded-[15px_15px_13px_13px] border border-border shadow-[0px_3px_5px_0px_rgba(0,0,0,0.02)] w-full overflow-auto">
-      <table className="w-full overflow-hidden">
-        <thead className="bg-foreground overflow-auto uppercase">
-          <tr className="text-left">
-            <th className="">Actor</th>
-            <th className="">Occurred At</th>
-            <th className="">ID</th>
-          </tr>
-        </thead>
-        <tbody className="overflow-auto">
-          {isEmpty && <tr><td colSpan={3} className="text-center">No events found</td></tr>}
-          {isLoading && <tr><td colSpan={3} className="text-center">Loading...</td></tr>}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Actor</TableHead>
+            <TableHead>Action</TableHead>
+            <TableHead>Date</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {isEmpty && <TableRow><TableCell colSpan={3} className="text-center">No events found</TableCell></TableRow>}
+          {isLoading && <TableRow><TableCell colSpan={3} className="text-center">Loading...</TableCell></TableRow>}
           {events.map((event) => (
-            <tr key={event.id} className="border-b">
-              <td className="">{event.actor.email}</td>
-              <td className="">{event.occurred_at}</td>
-              <td className="">{event.id}</td>
-            </tr>
+            <TableRow key={event.id} className="hover:bg-hover">
+              <TableCell>{event.actor.email}</TableCell>
+              <TableCell>{event.action_name}</TableCell>
+              <TableCell>{formatDate(new Date(event.occurred_at))}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={3}>
+        </TableBody>
+        <TableFooter className={cn(
+          isLoadingMore && "bg-foreground/70",
+          isReachingEnd && "opacity-50 hover:bg-foreground/100"
+        )}>
+          <TableRow>
+            <TableCell className="p-0" colSpan={3}>
               <button
-                className="bg-foreground h-full w-full hover:bg-foreground/70 font-semibold py-2 px-4 uppercase"
+                className="h-full w-full py-4 uppercase text-center text-sm font-semibold"
                 disabled={isReachingEnd || isLoadingMore}
                 onClick={() => setSize(size + 1)}
               >
                 {isLoadingMore ? "Loading..." : isReachingEnd ? "No more events" : "Load more"}
               </button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-      </div>
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
     </main>
   );
 }
