@@ -14,6 +14,7 @@ router.get('/', extractToken, async (req, res) => {
     let actorWhere = {};
     let targetWhere = {};
     let actionWhere = {};
+    let occurredAtWhere = {};
 
     if (req.query.search) {
         searchWhere = {
@@ -45,6 +46,12 @@ router.get('/', extractToken, async (req, res) => {
         }
     }
 
+    if (req.query.since) {
+        occurredAtWhere = {
+            occurred_at: { gte: new Date(req.query.since as string) }
+        }
+    }
+
     const events = await db.event.findMany({
         select: {
             id: true,
@@ -62,6 +69,7 @@ router.get('/', extractToken, async (req, res) => {
             ...actorWhere,
             ...targetWhere,
             ...actionWhere,
+            ...occurredAtWhere,
         }
     });
 

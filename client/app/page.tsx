@@ -18,7 +18,8 @@ import Loading from "@/components/Loading";
 import Row from "@/components/Row";
 import Button from "@/components/Button";
 import { instaLog } from "@/services/events";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
+import liveReducer, { initialLiveState } from "@/reducers/liveReducer";
 
 const PAGE_SIZE = 10;
 
@@ -28,6 +29,7 @@ export default function Home() {
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
   const debouncedSearch = useDebounce(search, 500);
+  const [liveState, liveDispatch] = useReducer(liveReducer, initialLiveState);
 
   const {
     data,
@@ -36,8 +38,15 @@ export default function Home() {
     setSize,
     mutate
   } = useSWRInfinite((index)=> 
-      `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}`, 
-      getEvents);
+      `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}${
+        liveState.isLive ? `&since=${liveState.since?.toISOString()}` : ""
+      }`, 
+      getEvents,
+      {
+        // refetch interval if live is enabled
+        refreshInterval: liveState.isLive ? 1000 : 0
+      }
+    );
 
   // Create event when search is performed
   useEffect(() => {
@@ -79,6 +88,10 @@ export default function Home() {
     replace(`${pathname}?${params.toString()}`);
   }
 
+  const handleToggleLive = () => {
+    liveDispatch({ type: 'TOGGLE_LIVE', payload: !liveState.isLive });
+  }
+
   return (
     <main className="py-12 px-4 sm:px-8 lg:px-[67px] lg:py-[74px]">
       <Table>
@@ -109,9 +122,14 @@ export default function Home() {
                   Export
                 </Button>
                 <Button
-                  className="border-l-0 rounded-tr-lg rounded-br-lg"
+                  className={cn("border-l-0 rounded-tr-lg rounded-br-lg", 
+                    liveState.isLive && "bg-red-500/5 hover:bg-red-500/10 text-red-500",
+                  )}
+                  onClick={handleToggleLive}
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg className={cn(
+                    liveState.isLive && "animate-pulse"
+                  )} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="6" cy="6" r="6" fill="#8F485D"/>
                   </svg>
                   Live
