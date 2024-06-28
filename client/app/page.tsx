@@ -17,9 +17,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Loading from "@/components/Loading";
 import Row from "@/components/Row";
 import Button from "@/components/Button";
-import { instaLog } from "@/services/events";
+import { instalog } from "@/services/events";
 import { useEffect, useReducer } from "react";
 import liveReducer, { initialLiveState } from "@/reducers/liveReducer";
+import GenerateButton from "@/components/GenerateButton";
 
 const PAGE_SIZE = 10;
 
@@ -51,7 +52,7 @@ export default function Home() {
   // Create event when search is performed
   useEffect(() => {
     async function createEvent() {
-    await instaLog.createEvent(
+    await instalog.createEvent(
       {
         "object": "event",
         "actor_id": "user_9N8UBQ45Y3",
@@ -93,7 +94,10 @@ export default function Home() {
   }
 
   return (
-    <main className="py-12 px-4 sm:px-8 lg:px-[67px] lg:py-[74px]">
+    <main className="flex flex-col gap-8 py-12 px-4 sm:px-8 lg:px-[67px] lg:py-14">
+      <div className="flex justify-between">
+        <GenerateButton mutate={mutate} />
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
