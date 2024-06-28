@@ -7,7 +7,7 @@ import signController from './controllers/sign';
 
 const app = express();
 app.use(cors({
-    origin: ['https://firecamp.dev', config.CORS_ORIGIN],
+    origin: ['https://firecamp.dev', config.CORS_ORIGIN, 'http://localhost:3000'],
 }));
 app.use(express.json());
 app.use(morgan('tiny'));
