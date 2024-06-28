@@ -52,7 +52,7 @@ export default function Home() {
         <TableHeader>
           <TableRow>
             <TableCell colSpan={4} className="px-4 pt-[17px] pb-0 bg-foreground rounded-[15px_15px_0px_0px]">
-              <Input placeholder="Search name, email or action..." onChange={handleSearch} />
+              <Input defaultValue={search} placeholder="Search name, email or action..." onChange={handleSearch} />
             </TableCell>
           </TableRow>
           <TableRow>
