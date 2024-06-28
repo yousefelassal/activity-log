@@ -94,7 +94,7 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col gap-8 py-12 px-4 sm:px-8 lg:px-[67px] lg:py-14">
+    <main className="flex flex-col gap-8 py-12 px-4 sm:px-8 lg:px-[67px]">
       <div className="flex justify-between">
         <GenerateButton mutate={mutate} />
       </div>
@@ -148,8 +148,9 @@ export default function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isEmpty && <TableRow><TableCell colSpan={3} className="text-center">No events found</TableCell></TableRow>}
-          {isLoading && <Loading />}
+          {isEmpty && !liveState.isLive && <TableRow><TableCell colSpan={3} className="text-center">No events found</TableCell></TableRow>}
+          {isLoading && !liveState.isLive && <Loading />}
+          {liveState.isLive && (isLoading || isEmpty) && <TableRow><TableCell colSpan={3} className="text-center">Listening for new events...</TableCell></TableRow>}
           {events.map((event) => <Row key={event.id} event={event} /> )}
         </TableBody>
         <TableFooter>
