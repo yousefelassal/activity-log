@@ -17,6 +17,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Loading from "@/components/Loading";
 import Row from "@/components/Row";
 import Button from "@/components/Button";
+import { instaLog } from "@/services/events";
 
 const PAGE_SIZE = 10;
 
@@ -31,7 +32,8 @@ export default function Home() {
     data,
     isLoading,
     size,
-    setSize
+    setSize,
+    mutate
   } = useSWRInfinite((index)=> 
       `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}`, 
       getEvents);
@@ -41,14 +43,34 @@ export default function Home() {
   const isEmpty = data?.[0]?.length === 0;
   const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("search", e.target.value);
     replace(`${pathname}?${params.toString()}`);
+    await instaLog.createEvent(
+      {
+        "object": "event",
+        "actor_id": "user_9N8UBQ45Y3",
+        "action": {
+          "id": "evt_action_PGTD81NCAOQ2",
+          "object": "event_action",
+          "name": "user.searched_activity_log_events"
+        },
+        "target_id": "user_DOKVD1U3L030",
+        "target_name": "ali@instatus.com",
+        "location": "105.40.62.95",
+        "metadata": {
+          "redirect": "/search",
+          "description": "User searched for activity log events",
+          "x_request_id": "req_W1Y13QOHMI5H"
+        },
+      }      
+    )
+    mutate();
   }
 
   return (
-    <main className="py-12 px-4 sm:px-8">
+    <main className="py-12 px-4 sm:px-8 lg:px-[67px] lg:py-[74px]">
       <Table>
         <TableHeader>
           <TableRow>
