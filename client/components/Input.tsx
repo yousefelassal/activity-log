@@ -5,7 +5,7 @@ const Input = ({ className, type, ...props }: React.InputHTMLAttributes<HTMLInpu
     <input
       type={type}
       className={cn(
-        "flex h-[45px] w-full text-[14px] font-normal border border-[#E0E0E0] bg-transparent text-primaryText text-sm rounded-lg p-3 placeholder:text-[#959595] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#959595] transition-all",
+        "flex h-[45px] w-full text-[14px] font-normal border border-[#E0E0E0] bg-transparent text-[#575757] text-sm rounded-lg p-3 placeholder:text-[#959595] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#959595] transition-all",
         className
       )}
       {...props}
