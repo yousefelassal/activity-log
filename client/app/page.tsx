@@ -18,6 +18,7 @@ import Loading from "@/components/Loading";
 import Row from "@/components/Row";
 import Button from "@/components/Button";
 import { instaLog } from "@/services/events";
+import { useEffect } from "react";
 
 const PAGE_SIZE = 10;
 
@@ -38,15 +39,9 @@ export default function Home() {
       `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}`, 
       getEvents);
 
-  const events = data ? data.flat() : [];
-  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
-  const isEmpty = data?.[0]?.length === 0;
-  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
-
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("search", e.target.value);
-    replace(`${pathname}?${params.toString()}`);
+  // Create event when search is performed
+  useEffect(() => {
+    async function createEvent() {
     await instaLog.createEvent(
       {
         "object": "event",
@@ -67,6 +62,21 @@ export default function Home() {
       }      
     )
     mutate();
+  }
+  if (debouncedSearch) {
+    createEvent();
+  }
+  }, [debouncedSearch]);
+
+  const events = data ? data.flat() : [];
+  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
+  const isEmpty = data?.[0]?.length === 0;
+  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("search", e.target.value);
+    replace(`${pathname}?${params.toString()}`);
   }
 
   return (
