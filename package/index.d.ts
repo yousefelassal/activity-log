@@ -1,4 +1,4 @@
-declare module 'InstaLog' {
+declare module 'instalog-logger' {
     interface EventObject {
         actor_id: string,
         action: {

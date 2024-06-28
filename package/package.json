@@ -1,6 +1,6 @@
 {
   "name": "instalog-logger",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Create and list events for logging",
   "main": "index.js",
   "types": "index.d.ts",
