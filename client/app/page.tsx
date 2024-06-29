@@ -31,6 +31,9 @@ export default function Home() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
+  const actorId = searchParams.get("actorId") || "";
+  const targetId = searchParams.get("targetId") || "";
+  const actionName = searchParams.get("actionName") || "";
   const debouncedSearch = useDebounce(search, 500);
   const [liveState, liveDispatch] = useReducer(liveReducer, initialLiveState);
   const filterPopoverRef = useRef<{ toggle: () => void } | null>(null);
@@ -42,7 +45,7 @@ export default function Home() {
     setSize,
     mutate
   } = useSWRInfinite((index)=> 
-      `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}${
+      `${baseUrl}/events?page=${index + 1}&limit=${PAGE_SIZE}&search=${debouncedSearch}&actorId=${actorId}&targetId=${targetId}&actionName=${actionName}${
         liveState.isLive ? `&since=${liveState.since?.toISOString()}` : ""
       }`, 
       getEvents,

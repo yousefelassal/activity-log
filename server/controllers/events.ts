@@ -85,7 +85,7 @@ router.get('/', extractToken, async (req, res) => {
     res.json(events);
 });
 
-router.get('/csv', extractToken, async (req, res) => {
+router.get('/csv', extractToken, async (_req, res) => {
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
 

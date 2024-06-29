@@ -17,21 +17,42 @@ const FilterPopover = forwardRef((props, ref) => {
     const [selectedTargetKeys, setSelectedTargetKeys] = useState<string[]>(searchParams.get('targetId')?.split(',') ?? [])
 
     useImperativeHandle(ref, () => ({
-        toggle: () => setIsOpen(!isOpen),
-        selectedActorKeys,
-        selectedActionKeys,
-        selectedTargetKeys
+        toggle: () => setIsOpen(!isOpen)
     }))
 
-    const onActorChange = (actorId: string) => {
-        if (selectedActorKeys.includes(actorId)) {
-            setSelectedActorKeys(selectedActorKeys.filter((id) => id !== actorId))
+    const onActorChange = (e: React.ChangeEvent<HTMLInputElement>, actorId: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (e.target.checked) {
+            setSelectedActorKeys([...selectedActorKeys, actorId]);
+            params.set('actorId', [...selectedActorKeys, actorId].join(','));
         } else {
-            setSelectedActorKeys([...selectedActorKeys, actorId])
+            setSelectedActorKeys(selectedActorKeys.filter((key) => key !== actorId));
+            params.set('actorId', selectedActorKeys.filter((key) => key !== actorId).join(','));
         }
+        replace(`${pathname}?${params.toString()}`);
+    }
 
-        const params = new URLSearchParams(searchParams.toString())
-        params.set('actorId', selectedActorKeys.join(','))
+    const onActionChange = (e: React.ChangeEvent<HTMLInputElement>, actionName: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (e.target.checked) {
+            setSelectedActionKeys([...selectedActionKeys, actionName]);
+            params.set('actionName', [...selectedActionKeys, actionName].join(','));
+        } else {
+            setSelectedActionKeys(selectedActionKeys.filter((key) => key !== actionName));
+            params.set('actionName', selectedActionKeys.filter((key) => key !== actionName).join(','));
+        }
+        replace(`${pathname}?${params.toString()}`);
+    }
+
+    const onTargetChange = (e: React.ChangeEvent<HTMLInputElement>, targetId: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (e.target.checked) {
+            setSelectedTargetKeys([...selectedTargetKeys, targetId]);
+            params.set('targetId', [...selectedTargetKeys, targetId].join(','));
+        } else {
+            setSelectedTargetKeys(selectedTargetKeys.filter((id) => id !== targetId));
+            params.set('targetId', selectedTargetKeys.filter((id) => id !== targetId).join(','));
+        }
         replace(`${pathname}?${params.toString()}`);
     }
 
@@ -48,20 +69,20 @@ const FilterPopover = forwardRef((props, ref) => {
                     {error && <div>Error loading filter options</div>}
                     {isLoading && <>
                         <div>
-                            <div className="h-[16px] w-[70px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                            <div className="grid gap-y-1">
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                            <div className="h-[20px] w-[70px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                            <div className="mt-1 grid gap-y-1">
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
                             </div>
                         </div>
                         <div>
-                            <div className="h-[16px] w-[70px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                            <div className="grid gap-y-1">
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
-                                <div className="h-[14px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                            <div className="h-[20px] w-[70px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                            <div className="mt-1 grid gap-y-1">
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                <div className="h-[18px] w-full rounded-sm animate-pulse bg-[#F8F8F8]"></div>
                             </div>
                         </div>
                     </>}
@@ -75,7 +96,7 @@ const FilterPopover = forwardRef((props, ref) => {
                                             <input
                                                 type="checkbox"
                                                 checked={selectedActorKeys.includes(actor.actor_id)}
-                                                onChange={() => onActorChange(actor.actor_id)}
+                                                onChange={(e) => onActorChange(e, actor.actor_id)}
                                             />
                                             <div className="w-full flex justify-between items-center">
                                                 <span>{actor.actor_id}</span>
@@ -93,13 +114,7 @@ const FilterPopover = forwardRef((props, ref) => {
                                             <input
                                                 type="checkbox"
                                                 checked={selectedActionKeys.includes(action.action_name)}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
-                                                        setSelectedActionKeys([...selectedActionKeys, action.action_name])
-                                                    } else {
-                                                        setSelectedActionKeys(selectedActionKeys.filter((key) => key !== action.action_name))
-                                                    }
-                                                }}
+                                                onChange={(e) => onActionChange(e, action.action_name)}
                                             />
                                             <div className="w-full flex justify-between items-center">
                                                 <span>{action.action_name}</span>
@@ -110,20 +125,14 @@ const FilterPopover = forwardRef((props, ref) => {
                                 </div>
                             </div>
                             <div>
-                                <div className="text-[#575757] text-[14px] font-semibold">Target</div>
+                                <div className="mt-1 text-[#575757] text-[14px] font-semibold">Target</div>
                                 <div className="grid gap-y-1">
                                     {data.targets.map((target) => (
                                         <label key={target.target_id} className="flex items-center gap-2 cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedTargetKeys.includes(target.target_id)}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
-                                                        setSelectedTargetKeys([...selectedTargetKeys, target.target_id])
-                                                    } else {
-                                                        setSelectedTargetKeys(selectedTargetKeys.filter((id) => id !== target.target_id))
-                                                    }
-                                                }}
+                                                onChange={(e) => onTargetChange(e, target.target_id)}
                                             />
                                             <div className="w-full flex justify-between items-center">
                                                 <span>{target.target_id}</span>
