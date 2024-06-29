@@ -129,20 +129,92 @@ router.get('/csv', extractToken, async (_req, res) => {
 
 router.get('/filter-options', extractToken, async (_req, res) => {
     const [actors, targets, actionNames] = await db.$transaction([
+        db.actor.findMany({
+            select: { id: true, name: true },
+        }),
+        db.event.findMany({
+            select: { target_id: true, target_name: true },
+            distinct: ['target_id'],
+        }),
+        db.event.findMany({
+            select: { action_name: true },
+            distinct: ['action_name'],
+        }),
+    ]);
+
+    res.json({
+        actors,
+        targets,
+        actionNames,
+    });
+});
+
+router.get('/filter-options-count', extractToken, async (req, res) => {
+    let searchWhere = {};
+    let actorWhere = {};
+    let targetWhere = {};
+    let actionNameWhere = {};
+
+    if (req.query.search) {
+        searchWhere = {
+            OR: [
+                { action_name: { contains: req.query.search as string, mode: 'insensitive' } },
+                { actor: { OR: [
+                    { name: { contains: req.query.search as string, mode: 'insensitive' } },
+                    { email: { contains: req.query.search as string, mode: 'insensitive' } },
+                ]}},
+            ],
+        };
+    }
+
+    if (req.query.actorId) {
+        actorWhere = {
+            actor_id: { in: (req.query.actorId as string).split(',') }
+        }
+    }
+
+    if (req.query.targetId) {
+        targetWhere = {
+            target_id: { in: (req.query.targetId as string).split(',') }
+        }
+    }
+
+    if (req.query.actionName) {
+        actionNameWhere = {
+            action_name: { in: (req.query.actionName as string).split(',') }
+        }
+    }
+
+    const [actors, targets, actionNames] = await db.$transaction([
         db.event.groupBy({
             by: ['actor_id'],
             _count: { actor_id: true },
             orderBy: { _count: { actor_id: 'desc' } },
+            where: {
+                ...searchWhere,
+                ...targetWhere,
+                ...actionNameWhere,
+            }
         }),
         db.event.groupBy({
             by: ['target_id'],
             _count: { target_id: true },
             orderBy: { _count: { target_id: 'desc' } },
+            where: {
+                ...searchWhere,
+                ...actorWhere,
+                ...actionNameWhere,
+            }
         }),
         db.event.groupBy({
             by: ['action_name'],
             _count: { action_name: true },
             orderBy: { _count: { action_name: 'desc' } },
+            where: {
+                ...searchWhere,
+                ...actorWhere,
+                ...targetWhere,
+            }
         }),
     ]);
 

@@ -64,6 +64,22 @@ const singleEvent = z.object({
 type SingleEvent = z.infer<typeof singleEvent>;
 
 const filterOptions = z.object({
+    actors: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+    })),
+    targets: z.array(z.object({
+        target_id: z.string(),
+        target_name: z.string(),
+    })),
+    actionNames: z.array(z.object({
+        action_name: z.string(),
+    })),
+});
+
+type FilterOptions = z.infer<typeof filterOptions>;
+
+const filterCountOptions = z.object({
   actors: z.array(z.object({
       _count: z.object({
         actor_id: z.number(),
@@ -84,7 +100,7 @@ const filterOptions = z.object({
   })),
 });
 
-type FilterOptions = z.infer<typeof filterOptions>;
+type FilterCountOptions = z.infer<typeof filterCountOptions>;
 
 export async function getEvents(url:string): Promise<AllEvents[]> {
   const { data } = await axios.get(url, {
@@ -114,6 +130,15 @@ export async function getEventsCSV(url:string): Promise<string> {
 }
 
 export async function getEventsFilterOptions(url:string): Promise<FilterOptions> {
+  const { data } = await axios.get(url, {
+    headers: {
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJncm91cF9pZCI6IklOU1RBVFVTLVBMS0FEU0lRMzIwIiwiaWF0IjoxNzE5NDExODc1fQ.qe8-fAwmXPiU0w8VsJ7BRBDGR2pB_OyjPiFguh_irJU'
+    }
+  });
+  return data;
+}
+
+export async function getEventsFilterCountOptions(url:string): Promise<FilterCountOptions> {
   const { data } = await axios.get(url, {
     headers: {
         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJncm91cF9pZCI6IklOU1RBVFVTLVBMS0FEU0lRMzIwIiwiaWF0IjoxNzE5NDExODc1fQ.qe8-fAwmXPiU0w8VsJ7BRBDGR2pB_OyjPiFguh_irJU'

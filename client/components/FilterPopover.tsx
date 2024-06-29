@@ -1,20 +1,28 @@
 import { baseUrl, cn } from '@/lib/utils'
 import { useState, forwardRef, useImperativeHandle } from 'react'
 import useSWR from 'swr'
-import { getEventsFilterOptions } from '@/services/events'
+import { getEventsFilterCountOptions, getEventsFilterOptions } from '@/services/events'
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const FilterPopover = forwardRef((props, ref) => {
     const [isOpen, setIsOpen] = useState(false)
     const { replace } = useRouter();
     const pathname = usePathname();
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
+    const search = searchParams.get("search") || "";
+    const actorId = searchParams.get("actorId") || "";
+    const targetId = searchParams.get("targetId") || "";
+    const actionName = searchParams.get("actionName") || "";
 
-    const { data, isLoading, error } = useSWR(isOpen ? `${baseUrl}/events/filter-options` : null, getEventsFilterOptions)
+    const { data, isLoading, error } = useSWR(isOpen ? `${baseUrl}/events/filter-options` : null, getEventsFilterOptions);
 
-    const [selectedActorKeys, setSelectedActorKeys] = useState<string[]>(searchParams.get('actorId')?.split(',') ?? [])
-    const [selectedActionKeys, setSelectedActionKeys] = useState<string[]>(searchParams.get('actionName')?.split(',') ?? [])
-    const [selectedTargetKeys, setSelectedTargetKeys] = useState<string[]>(searchParams.get('targetId')?.split(',') ?? [])
+    const { data:countData, isLoading:countIsLoading } = useSWR(isOpen ?
+        `${baseUrl}/events/filter-options-count?search=${search}&actorId=${actorId}&targetId=${targetId}&actionName=${actionName}`
+        : null, getEventsFilterCountOptions);
+
+    const [selectedActorKeys, setSelectedActorKeys] = useState<string[]>(actorId?.split(',') ?? [])
+    const [selectedTargetKeys, setSelectedTargetKeys] = useState<string[]>(targetId?.split(',') ?? [])
+    const [selectedActionKeys, setSelectedActionKeys] = useState<string[]>(actionName?.split(',') ?? [])
 
     useImperativeHandle(ref, () => ({
         toggle: () => setIsOpen(!isOpen)
@@ -92,15 +100,20 @@ const FilterPopover = forwardRef((props, ref) => {
                                 <div className="text-[#575757] text-[14px] font-semibold">Actor</div>
                                 <div className="grid gap-y-1">
                                     {data.actors.map((actor) => (
-                                        <label key={actor.actor_id} className="flex w-full items-center gap-2 cursor-pointer">
+                                        <label key={actor.id} className="flex w-full items-center gap-2 cursor-pointer">
                                             <input
                                                 type="checkbox"
-                                                checked={selectedActorKeys.includes(actor.actor_id)}
-                                                onChange={(e) => onActorChange(e, actor.actor_id)}
+                                                checked={selectedActorKeys.includes(actor.id)}
+                                                onChange={(e) => onActorChange(e, actor.id)}
                                             />
                                             <div className="w-full flex justify-between items-center">
-                                                <span>{actor.actor_id}</span>
-                                                <span>{actor._count.actor_id}</span>
+                                                <span>{actor.name}</span>
+                                                {countIsLoading ? (
+                                                    <div className="h-[18px] w-[18px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                                ) : (
+                                                    <span>{countData?.actors.find((a) => a.actor_id === actor.id)?._count.actor_id ?? 0}</span>
+                                                )
+                                                }
                                             </div>
                                         </label>
                                     ))}
@@ -118,7 +131,12 @@ const FilterPopover = forwardRef((props, ref) => {
                                             />
                                             <div className="w-full flex justify-between items-center">
                                                 <span>{action.action_name}</span>
-                                                <span>{action._count.action_name}</span>
+                                                {countIsLoading ? (
+                                                    <div className="h-[18px] w-[18px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                                ) : (
+                                                    <span>{countData?.actionNames.find((a) => a.action_name === action.action_name)?._count.action_name ?? 0}</span>
+                                                )
+                                                }
                                             </div>
                                         </label>
                                     ))}
@@ -135,8 +153,13 @@ const FilterPopover = forwardRef((props, ref) => {
                                                 onChange={(e) => onTargetChange(e, target.target_id)}
                                             />
                                             <div className="w-full flex justify-between items-center">
-                                                <span>{target.target_id}</span>
-                                                <span>{target._count.target_id}</span>
+                                                <span>{target.target_name}</span>
+                                                {countIsLoading ? (
+                                                    <div className="h-[18px] w-[18px] rounded-sm animate-pulse bg-[#F8F8F8]"></div>
+                                                ) : (
+                                                    <span>{countData?.targets.find((a) => a.target_id === target.target_id)?._count.target_id ?? 0}</span>
+                                                )
+                                                }
                                             </div>
                                         </label>
                                     ))}
