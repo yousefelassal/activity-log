@@ -23,6 +23,7 @@ const Row = ({ event }: { event: AllEvents }) => {
 
   return (
     <>
+    {/* overlay */}
     {showDetails && (
         <TableRow>
             <TableCell className="p-0">
@@ -117,9 +118,11 @@ const Row = ({ event }: { event: AllEvents }) => {
             </TableCell>
         ) : (
             <>
-                <TableCell className={cn("flex w-full h-full gap-[11px] items-center", showDetails && "bg-red-400")}>
-                <Avatar name={event.actor.name} />
-                <span>{event.actor.email}</span>
+                <TableCell>
+                    <div className="flex gap-[11px] items-center">
+                        <Avatar name={event.actor.name} />
+                        <span>{event.actor.email}</span>
+                    </div>
                 </TableCell>
                 <TableCell>{event.action_name}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
