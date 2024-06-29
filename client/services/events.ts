@@ -63,6 +63,29 @@ const singleEvent = z.object({
 
 type SingleEvent = z.infer<typeof singleEvent>;
 
+const filterOptions = z.object({
+  actors: z.array(z.object({
+      _count: z.object({
+        actor_id: z.number(),
+      }),
+      actor_id: z.string(),
+  })),
+  targets: z.array(z.object({
+      _count: z.object({
+        target_id: z.number(),
+      }),
+      target_id: z.string(),
+  })),
+  actionNames: z.array(z.object({
+      _count: z.object({
+        action_name: z.number(),
+      }),
+      action_name: z.string(),
+  })),
+});
+
+type FilterOptions = z.infer<typeof filterOptions>;
+
 export async function getEvents(url:string): Promise<AllEvents[]> {
   const { data } = await axios.get(url, {
     headers: {
@@ -82,6 +105,15 @@ export async function getEvent(url:string): Promise<SingleEvent> {
 }
 
 export async function getEventsCSV(url:string): Promise<string> {
+  const { data } = await axios.get(url, {
+    headers: {
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJncm91cF9pZCI6IklOU1RBVFVTLVBMS0FEU0lRMzIwIiwiaWF0IjoxNzE5NDExODc1fQ.qe8-fAwmXPiU0w8VsJ7BRBDGR2pB_OyjPiFguh_irJU'
+    }
+  });
+  return data;
+}
+
+export async function getEventsFilterOptions(url:string): Promise<FilterOptions> {
   const { data } = await axios.get(url, {
     headers: {
         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJncm91cF9pZCI6IklOU1RBVFVTLVBMS0FEU0lRMzIwIiwiaWF0IjoxNzE5NDExODc1fQ.qe8-fAwmXPiU0w8VsJ7BRBDGR2pB_OyjPiFguh_irJU'

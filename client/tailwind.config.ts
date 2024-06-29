@@ -14,7 +14,23 @@ const config: Config = {
         foreground: "#F5F5F5",
         hover: "#FBFBFB",
         border: "#F0F0F0"
-      }
+      },
+      keyframes: {
+        fadeAndScaleIn: {
+          "0%": {
+            opacity: "0",
+            transform: "scale(0.95)"
+          },
+          "100%": {
+            opacity: "1",
+            transform: "scale(1)",
+
+          }
+        }
+      },
+      animation: {
+        fadeAndScaleIn: "fadeAndScaleIn 0.2s ease-in-out"
+      },
     },
   },
   plugins: [],

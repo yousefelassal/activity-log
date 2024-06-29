@@ -15,6 +15,7 @@ router.get('/', extractToken, async (req, res) => {
     let actorWhere = {};
     let targetWhere = {};
     let actionWhere = {};
+    let actionNameWhere = {};
     let occurredAtWhere = {};
 
     if (req.query.search) {
@@ -47,6 +48,12 @@ router.get('/', extractToken, async (req, res) => {
         }
     }
 
+    if (req.query.actionName) {
+        actionNameWhere = {
+            action_name: { in: (req.query.actionName as string).split(',') }
+        }
+    }
+
     if (req.query.since) {
         occurredAtWhere = {
             occurred_at: { gte: new Date(req.query.since as string) }
@@ -70,6 +77,7 @@ router.get('/', extractToken, async (req, res) => {
             ...actorWhere,
             ...targetWhere,
             ...actionWhere,
+            ...actionNameWhere,
             ...occurredAtWhere,
         }
     });
@@ -116,6 +124,33 @@ router.get('/csv', extractToken, async (req, res) => {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename=events.csv');
     res.send(csv);
+});
+
+
+router.get('/filter-options', extractToken, async (_req, res) => {
+    const [actors, targets, actionNames] = await db.$transaction([
+        db.event.groupBy({
+            by: ['actor_id'],
+            _count: { actor_id: true },
+            orderBy: { _count: { actor_id: 'desc' } },
+        }),
+        db.event.groupBy({
+            by: ['target_id'],
+            _count: { target_id: true },
+            orderBy: { _count: { target_id: 'desc' } },
+        }),
+        db.event.groupBy({
+            by: ['action_name'],
+            _count: { action_name: true },
+            orderBy: { _count: { action_name: 'desc' } },
+        }),
+    ]);
+
+    res.json({
+        actors,
+        targets,
+        actionNames,
+    });
 });
 
 router.get('/:id', extractToken, async (req, res) => {
