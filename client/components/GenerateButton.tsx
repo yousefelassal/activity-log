@@ -42,6 +42,7 @@ const GenerateButton = ({ mutate }:{ mutate: () => void }) => {
     <button
         className="flex items-center justify-center bg-foreground text-sm font-normal border border-border rounded-md w-[200px] py-2 hover:bg-foreground/70 transition-colors"
         onClick={generateRandomEvent}
+        disabled={isLoading}
     >
         {isLoading ? "Generating..." : "Generate Random Event"}
     </button>

@@ -2,6 +2,7 @@ import Router from 'express';
 import db from '../util/db';
 import { z } from 'zod';
 import { validate, extractToken } from '../util/middleware';
+import { AsyncParser } from '@json2csv/node';
 
 const router = Router();
 
@@ -74,6 +75,47 @@ router.get('/', extractToken, async (req, res) => {
     });
 
     res.json(events);
+});
+
+router.get('/csv', extractToken, async (req, res) => {
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const events = await db.event.findMany({
+        select: {
+            id: true,
+            actor: { select: { email: true, name: true } },
+            action_name: true,
+            object: true,
+            target_name: true,
+            location: true,
+            occurred_at: true,
+        },
+        orderBy: {
+            occurred_at: 'desc',
+        },
+        where: {
+            occurred_at: { gte: weekAgo }
+        }
+    });
+
+    const fields = [
+        { label: 'ID', value: 'id' },
+        { label: 'Actor Name', value: 'actor.name' },
+        { label: 'Actor Email', value: 'actor.email' },
+        { label: 'Action', value: 'action_name' },
+        { label: 'Object', value: 'object' },
+        { label: 'Target Name', value: 'target_name' },
+        { label: 'Location', value: 'location' },
+        { label: 'Occurred At', value: 'occurred_at' },
+    ];
+
+    const json2csvParser = new AsyncParser({ fields });
+    const csv = await json2csvParser.parse(events).promise();
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=events.csv');
+    res.send(csv);
 });
 
 router.get('/:id', extractToken, async (req, res) => {
