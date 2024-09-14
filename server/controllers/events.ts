@@ -86,8 +86,8 @@ router.get('/', extractToken, async (req, res) => {
 });
 
 router.get('/csv', extractToken, async (_req, res) => {
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
+    // const weekAgo = new Date();
+    // weekAgo.setDate(weekAgo.getDate() - 7);
 
     const events = await db.event.findMany({
         select: {
@@ -102,9 +102,9 @@ router.get('/csv', extractToken, async (_req, res) => {
         orderBy: {
             occurred_at: 'desc',
         },
-        where: {
-            occurred_at: { gte: weekAgo }
-        }
+        // where: {
+        //     occurred_at: { gte: weekAgo }
+        // }
     });
 
     const fields = [
